@@ -5,15 +5,17 @@ import com.sun.net.httpserver.SimpleFileServer;
 import space.cyberaster.cycling.ginat.BicyclingRecord;
 import space.cyberaster.cycling.ginat.BicyclingRecordLap;
 import space.cyberaster.cycling.ginat.BicyclingRecordSecData;
+import space.cyberaster.cycling.web.handler.LoginHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import java.net.InetAddress;
 /**
  * Hello world!
  *
@@ -134,13 +136,16 @@ public class App
     }
 
 
-    public static void main( String[] args ) {
-        new App().process();
+    public static void main( String[] args ) throws IOException {
+//        new App().process();
         InetSocketAddress addr = new InetSocketAddress(9000);
         String absolutePath1 = new File("./").getAbsolutePath();
         Path path = Path.of(absolutePath1+"/src/main/resources/web");
         Path absolutePath = path.toAbsolutePath();
-        HttpServer fileServer = SimpleFileServer.createFileServer(addr, absolutePath, SimpleFileServer.OutputLevel.VERBOSE);
-        fileServer.start();
+        HttpServer httpserver = SimpleFileServer.createFileServer(addr, absolutePath, SimpleFileServer.OutputLevel.VERBOSE);
+        httpserver.createContext("/login", new LoginHandler());
+        httpserver.setExecutor(null);
+        httpserver.start();
+        System.out.println("server started");
     }
 }
