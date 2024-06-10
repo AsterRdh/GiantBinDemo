@@ -3,7 +3,7 @@ package space.cyberaster.cycling.web.vo;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class Response<T> {
+public class AppResponse<T> {
     private int code;
     private boolean ok;
     private String message;
@@ -11,7 +11,7 @@ public class Response<T> {
     private String errorInfo;
 
 
-    private Response(int code, boolean ok, String message, T data) {
+    private AppResponse(int code, boolean ok, String message, T data) {
         this.code = code;
         this.ok = ok;
         this.message = message;
@@ -19,7 +19,7 @@ public class Response<T> {
     }
 
 
-    public Response(int code, boolean ok, String message, T data, String errorInfo) {
+    public AppResponse(int code, boolean ok, String message, T data, String errorInfo) {
         this.code = code;
         this.ok = ok;
         this.message = message;
@@ -27,23 +27,23 @@ public class Response<T> {
         this.errorInfo = errorInfo;
     }
 
-    public static <T> Response<T> OK(T data) {
+    public static <T> AppResponse<T> OK(T data) {
         return OK("成功",data);
     }
-    public static <T> Response<T> OK(String msg) {
+    public static <T> AppResponse<T> OK(String msg) {
         return OK(msg, null);
     }
-    public static <T> Response<T> OK(String msg,T data) {
-        return new Response<>(200, true, msg, data);
+    public static <T> AppResponse<T> OK(String msg, T data) {
+        return new AppResponse<>(200, true, msg, data);
     }
 
-    public static <T> Response<T> ERROR(String msg) {
+    public static <T> AppResponse<T> ERROR(String msg) {
         return ERROR(msg, null);
     }
-    public static <T> Response<T> ERROR(Throwable throwable) {
+    public static <T> AppResponse<T> ERROR(Throwable throwable) {
         return ERROR(throwable.getMessage(), throwable);
     }
-    public static <T> Response<T> ERROR(String msg,Throwable throwable) {
+    public static <T> AppResponse<T> ERROR(String msg, Throwable throwable) {
         String stackTraceString = null;
         if (throwable != null) {
             StringWriter sw = new StringWriter();
@@ -51,7 +51,7 @@ public class Response<T> {
             throwable.printStackTrace(pw);
             stackTraceString  =  sw.getBuffer().toString();
         }
-        return new Response<>(500, false, msg, null, stackTraceString );
+        return new AppResponse<>(500, false, msg, null, stackTraceString );
     }
 
     public int getCode() {

@@ -1,16 +1,14 @@
-package space.cyberaster.cycling.web.handler;
+package space.cyberaster.cycling.web.handler.base;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import space.cyberaster.cycling.web.vo.Response;
+import space.cyberaster.cycling.web.vo.AppResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
@@ -27,22 +25,22 @@ public abstract class BaseHttpHandler <T> implements HttpHandler {
 
         Headers responseHeaders = httpExchange.getResponseHeaders();
         responseHeaders.set("Content-Type", "application/json; charset=utf-8");
-        Response<T> objectResponse = null;
+        AppResponse<T> objectAppResponse = null;
         switch (requestMethod) {
             case "GET":
-                objectResponse = doGet(httpExchange);
+                objectAppResponse = doGet(httpExchange);
                 break;
             case "POST":
-                objectResponse =  doPost(httpExchange);
+                objectAppResponse =  doPost(httpExchange);
                 break;
             default:
-                objectResponse = Response.ERROR("不支持的请求类型");
+                objectAppResponse = AppResponse.ERROR("不支持的请求类型");
         }
 
-        String json = gson.toJson(objectResponse);
+        String json = gson.toJson(objectAppResponse);
 
 
-        httpExchange.sendResponseHeaders(objectResponse.getCode(), json.getBytes(StandardCharsets.UTF_8).length);
+        httpExchange.sendResponseHeaders(objectAppResponse.getCode(), json.getBytes(StandardCharsets.UTF_8).length);
 
         OutputStream responseBody = httpExchange.getResponseBody();
         OutputStreamWriter writer = new OutputStreamWriter(responseBody, StandardCharsets.UTF_8);
@@ -53,10 +51,10 @@ public abstract class BaseHttpHandler <T> implements HttpHandler {
 
     }
 
-    public Response<T> doGet(HttpExchange httpExchange) throws IOException{
+    public AppResponse<T> doGet(HttpExchange httpExchange) throws IOException{
         return null;
     };
-    public Response<T> doPost(HttpExchange httpExchange) throws IOException{
+    public AppResponse<T> doPost(HttpExchange httpExchange) throws IOException{
         return null;
     };
 
